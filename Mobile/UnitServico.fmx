@@ -1,0 +1,13 @@
+﻿object FrmServiço: TFrmServiço
+  Left = 0
+  Top = 0
+  Caption = 'Easy Sal'#227'o'
+  ClientHeight = 480
+  ClientWidth = 390
+  Fill.Kind = Solid
+  Position = MainFormCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+end
