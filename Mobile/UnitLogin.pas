@@ -16,7 +16,7 @@ type
     Edit1: TEdit;
     Edit2: TEdit;
     rectAcessar: TRectangle;
-    btnAcessar: TSpeedButton;
+    btnLogin: TSpeedButton;
     TabControl: TTabControl;
     TabLogin: TTabItem;
     TabNovaConta: TTabItem;
@@ -29,6 +29,7 @@ type
     Rectangle3: TRectangle;
     SpeedButton1: TSpeedButton;
     Edit5: TEdit;
+    procedure btnLoginClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -41,5 +42,15 @@ var
 implementation
 
 {$R *.fmx}
+
+uses UnitPrincipal;
+
+procedure TFrmLogin.btnLoginClick(Sender: TObject);
+begin
+  if NOT Assigned(FrmPrincipal) then
+    Application.CreateForm(TfrmPrincipal, FrmPrincipal);
+
+  FrmPrincipal.Show;
+end;
 
 end.

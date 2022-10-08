@@ -5,14 +5,17 @@ uses
   FMX.Forms,
   UnitLogin in 'UnitLogin.pas' {FrmLogin},
   UnitPrincipal in 'UnitPrincipal.pas' {FrmPrincipal},
-  UnitServico in 'UnitServico.pas' {FrmServiço};
+  UnitServico in 'UnitServico.pas' {FrmServiço},
+  UnitReserva in 'UnitReserva.pas' {FrmReserva},
+  uFunctions in 'Units\uFunctions.pas',
+  uHorizontalMenu in 'Units\uHorizontalMenu.pas',
+  DataModule.Global in 'DataModule\DataModule.Global.pas' {DataModule1: TDataModule};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.CreateForm(TFrmLogin, FrmLogin);
-  Application.CreateForm(TFrmPrincipal, FrmPrincipal);
-  Application.CreateForm(TFrmServiço, FrmServiço);
+  Application.CreateForm(TDataModule1, DataModule1);
   Application.Run;
 end.

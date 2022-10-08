@@ -7,7 +7,7 @@ uses
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.TabControl,
   FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls, FMX.ListBox,
   FMX.Edit, FMX.ListView.Types, FMX.ListView.Appearances,
-  FMX.ListView.Adapters.Base, FMX.ListView;
+  FMX.ListView.Adapters.Base, FMX.ListView, uHorizontalMenu;
 
 type
   TFrmPrincipal = class(TForm)
@@ -19,7 +19,7 @@ type
     Image2: TImage;
     hscrollBanners: THorzScrollBox;
     Label2: TLabel;
-    ListBox1: TListBox;
+    lbCategorias: TListBox;
     rectAbas: TRectangle;
     imgAba1: TImage;
     imgAba2: TImage;
@@ -39,7 +39,16 @@ type
     imgIconeHora: TImage;
     imgIconeValor: TImage;
     imgIconeCancelar: TImage;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure imgAba1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
+    banners: THorizontalMenu;
+    procedure SelecionarAba(Img: TImage);
+    procedure ListarBanners;
+    procedure ListarCategorias;
+    procedure CarregarTelaInicial;
     { Private declarations }
   public
     { Public declarations }
@@ -51,5 +60,58 @@ var
 implementation
 
 {$R *.fmx}
+
+uses DataModule.Global;
+
+procedure TFrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := TCloseAction.caFree;
+  FrmPrincipal := nil;
+end;
+
+procedure TFrmPrincipal.SelecionarAba(Img: TImage);
+begin
+  imgAba1.Opacity := 0.3;
+  imgAba2.Opacity := 0.3;
+  imgAba3.Opacity := 0.3;
+
+  Img.Opacity := 1;
+  TabControl.GotoVisibleTab(Img.Tag);
+end;
+
+procedure TFrmPrincipal.FormCreate(Sender: TObject);
+begin
+  banners := THorizontalMenu.Create(hscrollBanners);
+  banners.MarginPadrao := 10;
+end;
+
+procedure TFrmPrincipal.FormDestroy(Sender: TObject);
+begin
+  banners.DisposeOf;
+end;
+
+procedure TFrmPrincipal.ListarBanners;
+begin
+
+end;
+
+procedure TFrmPrincipal.ListarCategorias;
+begin
+
+end;
+
+procedure TFrmPrincipal.CarregarTelaInicial;
+begin
+  banners.DeleteAll;
+  lbCategorias.Items.Clear;
+
+  ListarBanners;
+  ListarCategorias;
+end;
+
+procedure TFrmPrincipal.imgAba1Click(Sender: TObject);
+begin
+  SelecionarAba(TImage(Sender));
+end;
 
 end.
