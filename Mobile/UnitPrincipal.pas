@@ -43,6 +43,7 @@ type
     procedure imgAba1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     banners: THorizontalMenu;
     procedure SelecionarAba(Img: TImage);
@@ -61,7 +62,7 @@ implementation
 
 {$R *.fmx}
 
-uses DataModule.Global;
+uses DataModule.Global, uFunctions;
 
 procedure TFrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -90,9 +91,39 @@ begin
   banners.DisposeOf;
 end;
 
-procedure TFrmPrincipal.ListarBanners;
+procedure TFrmPrincipal.FormShow(Sender: TObject);
 begin
+  CarregarTelaInicial;
+end;
 
+procedure TFrmPrincipal.ListarBanners;
+var
+  icone: TBitmap;
+begin
+  DmGlobal.ListarBanners;
+
+  with DmGlobal.TabBanner do
+  begin
+    while NOT eof do
+    begin
+      icone := TBitmap.Create;
+      LoadImageFromURL(icone, FieldByName('foto').AsString);
+
+      banners.AddItem(FieldByName('banner').AsString,
+                      icone,
+                      '',
+                      300,
+                      $FFCCCCCC,
+                      0,
+                      $FF6E6E6E,
+                      '',
+                      nil,
+                      FieldByName('cod_banner').AsInteger);
+
+      icone.DisposeOf;
+      Next;
+    end;
+  end;
 end;
 
 procedure TFrmPrincipal.ListarCategorias;
