@@ -9,12 +9,14 @@ uses
   UnitReserva in 'UnitReserva.pas' {FrmReserva},
   uFunctions in 'Units\uFunctions.pas',
   uHorizontalMenu in 'Units\uHorizontalMenu.pas',
-  DataModule.Global in 'DataModule\DataModule.Global.pas' {DataModule1: TDataModule};
+  DataModule.Global in 'DataModule\DataModule.Global.pas' {DmGlobal: TDataModule},
+  Frame.Categoria in 'Frames\Frame.Categoria.pas' {FrameCategoria: TFrame};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.CreateForm(TFrmLogin, FrmLogin);
+  Application.CreateForm(TDmGlobal, DmGlobal);
   Application.Run;
 end.

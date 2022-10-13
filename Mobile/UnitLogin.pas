@@ -48,7 +48,7 @@ uses UnitPrincipal;
 procedure TFrmLogin.btnLoginClick(Sender: TObject);
 begin
   if NOT Assigned(FrmPrincipal) then
-    Application.CreateForm(TfrmPrincipal, FrmPrincipal);
+    Application.CreateForm(TFrmPrincipal, FrmPrincipal);
 
   FrmPrincipal.Show;
 end;

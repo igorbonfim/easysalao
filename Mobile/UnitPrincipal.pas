@@ -6,8 +6,8 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.TabControl,
   FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls, FMX.ListBox,
-  FMX.Edit, FMX.ListView.Types, FMX.ListView.Appearances,
-  FMX.ListView.Adapters.Base, FMX.ListView, uHorizontalMenu;
+  FMX.Edit, FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base,
+  FMX.ListView, uHorizontalMenu, uFunctions;
 
 type
   TFrmPrincipal = class(TForm)
@@ -62,7 +62,7 @@ implementation
 
 {$R *.fmx}
 
-uses DataModule.Global, uFunctions;
+uses DataModule.Global, Frame.Categoria;
 
 procedure TFrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -127,8 +127,39 @@ begin
 end;
 
 procedure TFrmPrincipal.ListarCategorias;
+var
+  icone: TBitmap;
+  item: TListBoxItem;
+  frame: TFrameCategoria;
 begin
+  DmGlobal.ListarCategorias;
 
+  with DmGlobal.TabCategoria do
+  begin
+    while NOT eof do
+    begin
+      icone := TBitmap.Create;
+      LoadImageFromURL(icone, FieldByName('icone').AsString);
+
+      item := TListBoxItem.Create(lbCategorias);
+      item.Text := '';
+      item.Width := 150;
+      item.Height := 170;
+      item.Selectable := false;
+      item.Tag := FieldByName('cod_categoria').AsInteger;
+
+      frame := TFrameCategoria.Create(item);
+      frame.Parent := item;
+      frame.Align := TAlignLayout.Client;
+      frame.lblCategoria.Text := FieldByName('categoria').AsString;
+      frame.imgCategoria.Bitmap := icone;
+
+      lbCategorias.AddObject(item);
+
+      icone.DisposeOf;
+      Next;
+    end;
+  end;
 end;
 
 procedure TFrmPrincipal.CarregarTelaInicial;

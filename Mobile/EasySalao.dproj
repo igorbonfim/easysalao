@@ -277,9 +277,14 @@
         <DCCReference Include="Units\uFunctions.pas"/>
         <DCCReference Include="Units\uHorizontalMenu.pas"/>
         <DCCReference Include="DataModule\DataModule.Global.pas">
-            <Form>DataModule1</Form>
+            <Form>DmGlobal</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Frames\Frame.Categoria.pas">
+            <Form>FrameCategoria</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
