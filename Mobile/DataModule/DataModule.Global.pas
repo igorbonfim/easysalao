@@ -12,6 +12,7 @@ type
   TDmGlobal = class(TDataModule)
     TabBanner: TFDMemTable;
     TabCategoria: TFDMemTable;
+    TabReserva: TFDMemTable;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -19,6 +20,8 @@ type
     { Public declarations }
     procedure ListarBanners;
     procedure ListarCategorias;
+    procedure ListarReservas(cod_usuario: integer);
+    procedure CancelarReserva(cod_reserva: integer);
   end;
 
 var
@@ -47,6 +50,9 @@ begin
           '{"cod_banner": "0003", "banner": "Conheça o kit da linha Nutri-Enrich",' +
           '"foto": "https://easysalao.s3.amazonaws.com/banner3.png"}]';
 
+  if TabBanner.Active then
+    TabBanner.EmptyDataSet;
+
   TabBanner.FieldDefs.Clear;
   TabBanner.LoadFromJSON(json);
 end;
@@ -68,8 +74,38 @@ begin
            '{"cod_categoria": "0006", "categoria": "Estética",' +
            '"icone": "https://easysalao.s3.amazonaws.com/estetica.png"}]';
 
+  if TabCategoria.Active then
+    TabCategoria.EmptyDataSet;
+
   TabCategoria.FieldDefs.Clear;
   TabCategoria.LoadFromJSON(json);
+end;
+
+procedure TDmGlobal.ListarReservas(cod_usuario: integer);
+var
+  json: string;
+begin
+  json :=  '[{"cod_reserva": 1, "servico": "Corte Cabelo Feminino", "data": "15/10/2022", "hora": "09:30", "valor": 200},' +
+            '{"cod_reserva": 2, "servico": "Corte Cabelo Masculino", "data": "02/11/2022", "hora": "14:00", "valor": 75}]';
+
+  if TabReserva.Active then
+    TabReserva.EmptyDataSet;
+
+  TabReserva.FieldDefs.Clear;
+  TabReserva.LoadFromJSON(json);
+end;
+
+procedure TDmGlobal.CancelarReserva(cod_reserva: integer);
+var
+  json: string;
+begin
+  json :=  '{"cod_reserva": 1}';
+
+  if TabReserva.Active then
+    TabReserva.EmptyDataSet;
+
+  TabReserva.FieldDefs.Clear;
+  TabReserva.LoadFromJSON(json);
 end;
 
 end.

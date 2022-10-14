@@ -44,15 +44,23 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure lvReservasItemClickEx(const Sender: TObject; ItemIndex: Integer;
+      const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
   private
     banners: THorizontalMenu;
+    FCod_Usuario: integer;
     procedure SelecionarAba(Img: TImage);
     procedure ListarBanners;
     procedure ListarCategorias;
     procedure CarregarTelaInicial;
+    procedure AddReserva(cod_reserva: integer; descricao, dt, hora: string;
+      valor: double);
+    procedure ListarReservas;
     { Private declarations }
   public
     { Public declarations }
+    property Cod_Usuario: integer read FCod_Usuario write FCod_Usuario;
   end;
 
 var
@@ -63,6 +71,33 @@ implementation
 {$R *.fmx}
 
 uses DataModule.Global, Frame.Categoria;
+
+procedure TFrmPrincipal.AddReserva(cod_reserva: integer;
+                                   descricao, dt, hora: string;
+                                   valor: double);
+var
+  item: TListViewItem;
+begin
+  item := lvReservas.Items.Add;
+
+  with item do
+  begin
+    Height := 110;
+    Tag := cod_reserva;
+
+    TListItemText(item.Objects.FindDrawable('txtDescricao')).Text := descricao;
+    TListItemText(item.Objects.FindDrawable('txtData')).Text := dt;
+    TListItemText(item.Objects.FindDrawable('txtHora')).Text := hora;
+    TListItemText(item.Objects.FindDrawable('txtValor')).Text := FormatFloat('#,##0.00',valor);
+
+    TListItemImage(Objects.FindDrawable('imgData')).Bitmap := imgIconeData.Bitmap;
+    TListItemImage(Objects.FindDrawable('imgHora')).Bitmap := imgIconeHora.Bitmap;
+    TListItemImage(Objects.FindDrawable('imgValor')).Bitmap := imgIconeValor.Bitmap;
+
+    TListItemImage(Objects.FindDrawable('imgCancelar')).Bitmap := imgIconeCancelar.Bitmap;
+    TListItemImage(Objects.FindDrawable('imgCancelar')).TagFloat := cod_reserva.ToDouble;
+  end;
+end;
 
 procedure TFrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -78,6 +113,9 @@ begin
 
   Img.Opacity := 1;
   TabControl.GotoVisibleTab(Img.Tag);
+
+  if Img.Tag = 1 then
+    ListarReservas;
 end;
 
 procedure TFrmPrincipal.FormCreate(Sender: TObject);
@@ -89,6 +127,11 @@ end;
 procedure TFrmPrincipal.FormDestroy(Sender: TObject);
 begin
   banners.DisposeOf;
+end;
+
+procedure TFrmPrincipal.FormResize(Sender: TObject);
+begin
+  lbCategorias.Columns := Trunc(lbCategorias.Width / 150);
 end;
 
 procedure TFrmPrincipal.FormShow(Sender: TObject);
@@ -159,6 +202,43 @@ begin
       icone.DisposeOf;
       Next;
     end;
+  end;
+end;
+
+procedure TFrmPrincipal.ListarReservas;
+begin
+  lvReservas.Items.Clear;
+
+  DmGlobal.ListarReservas(Cod_Usuario);
+
+  with DmGlobal.TabReserva do
+  begin
+    while NOT eof do
+    begin
+      AddReserva(FieldByName('cod_reserva').AsInteger,
+                 FieldByName('servico').AsString,
+                 FieldByName('data').AsString,
+                 FieldByName('hora').AsString,
+                 FieldByName('valor').AsFloat);
+      Next;
+    end;
+  end;
+end;
+
+procedure TFrmPrincipal.lvReservasItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  try
+    if Assigned(ItemObject) then
+      if ItemObject.Name = 'imgCancelar' then
+      begin
+        DmGlobal.CancelarReserva(Trunc(ItemObject.TagFloat));
+        lvReservas.Items.Delete(ItemIndex);
+      end;
+      
+  except on ex:exception do
+    ShowMessage('Erro ao cancelar reserva: ' +ex.Message);
   end;
 end;
 

@@ -1,14 +1,14 @@
 object FrameCategoria: TFrameCategoria
   HitTest = False
-  Size.Width = 127.000000000000000000
+  Size.Width = 180.000000000000000000
   Size.Height = 170.000000000000000000
   Size.PlatformDefault = False
   object Rectangle1: TRectangle
     Fill.Color = xFF5841AD
     HitTest = False
-    Position.X = 11.000000000000000000
+    Position.X = 16.000000000000000000
     Position.Y = 16.000000000000000000
-    Size.Width = 100.000000000000000000
+    Size.Width = 150.000000000000000000
     Size.Height = 120.000000000000000000
     Size.PlatformDefault = False
     XRadius = 6.000000000000000000
@@ -23,7 +23,7 @@ object FrameCategoria: TFrameCategoria
       Margins.Top = 25.000000000000000000
       Margins.Right = 25.000000000000000000
       Margins.Bottom = 25.000000000000000000
-      Size.Width = 50.000000000000000000
+      Size.Width = 100.000000000000000000
       Size.Height = 73.000000000000000000
       Size.PlatformDefault = False
     end
@@ -31,7 +31,7 @@ object FrameCategoria: TFrameCategoria
       Align = Bottom
       Margins.Bottom = -20.000000000000000000
       Position.Y = 123.000000000000000000
-      Size.Width = 100.000000000000000000
+      Size.Width = 150.000000000000000000
       Size.Height = 17.000000000000000000
       Size.PlatformDefault = False
       TextSettings.HorzAlign = Center
