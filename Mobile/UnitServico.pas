@@ -12,12 +12,12 @@ type
   TFrmServico = class(TForm)
     Rectangle1: TRectangle;
     lblTitulo: TLabel;
-    Image1: TImage;
+    imgVoltar: TImage;
     lvServicos: TListView;
     imgIconeValor: TImage;
     imgIconeReservar: TImage;
     procedure FormShow(Sender: TObject);
-    procedure Image1Click(Sender: TObject);
+    procedure imgVoltarClick(Sender: TObject);
     procedure lvServicosItemClickEx(const Sender: TObject; ItemIndex: Integer;
       const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
   private
@@ -70,7 +70,7 @@ begin
   ListarServicos;
 end;
 
-procedure TFrmServico.Image1Click(Sender: TObject);
+procedure TFrmServico.imgVoltarClick(Sender: TObject);
 begin
   Close;
 end;

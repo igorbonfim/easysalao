@@ -33,7 +33,7 @@ type
     Label5: TLabel;
     edtEmail: TEdit;
     rectAcessar: TRectangle;
-    btnAcessar: TSpeedButton;
+    btnPerfil: TSpeedButton;
     lvReservas: TListView;
     imgIconeData: TImage;
     imgIconeHora: TImage;
@@ -47,12 +47,14 @@ type
     procedure FormResize(Sender: TObject);
     procedure lvReservasItemClickEx(const Sender: TObject; ItemIndex: Integer;
       const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
-    procedure btnAcessarClick(Sender: TObject);
+    procedure btnPerfilClick(Sender: TObject);
     procedure lbCategoriasItemClick(const Sender: TCustomListBox;
       const Item: TListBoxItem);
   private
     banners: THorizontalMenu;
     FCod_Usuario: integer;
+    FEmail: string;
+    FNome: string;
     procedure SelecionarAba(Img: TImage);
     procedure ListarBanners;
     procedure ListarCategorias;
@@ -61,10 +63,19 @@ type
       valor: double);
     procedure ListarReservas;
     procedure ThreadInicialTerminate(Sender: TObject);
+
+    {$IFDEF MSWINDOWS}
+    procedure ClickBanner(Sender: TObject);
+    {$ELSE}
+    procedure ClickBanner(Sender: TObject; const Point: TPointF);
+    {$ENDIF}
+
     { Private declarations }
   public
     { Public declarations }
     property Cod_Usuario: integer read FCod_Usuario write FCod_Usuario;
+    property Email: string read FEmail write FEmail;
+    property Nome: string read FNome write FNome;
   end;
 
 var
@@ -143,6 +154,20 @@ begin
   CarregarTelaInicial;
 end;
 
+{$IFDEF MSWINDOWS}
+procedure TFrmPrincipal.ClickBanner(Sender: TObject);
+begin
+  //ShowMessage(TMyLayout(Sender).codInteger.ToString);
+  ShowMessage(TMyLayout(Sender).codString);
+end;
+{$ELSE}
+procedure TFrmPrincipal.ClickBanner(Sender: TObject, const Point: TPointF);
+begin
+  //ShowMessage(TMyLayout(Sender).codInteger.ToString);
+  ShowMessage(TMyLayout(Sender).codString);
+end;
+{$ENDIF
+}
 procedure TFrmPrincipal.ListarBanners;
 var
   icone: TBitmap;
@@ -159,15 +184,15 @@ begin
       TThread.Synchronize(TThread.CurrentThread, procedure
       begin
         banners.AddItem(FieldByName('banner').AsString,
-                      icone,
-                      '',
-                      300,
-                      $FFCCCCCC,
-                      0,
-                      $FF6E6E6E,
-                      '',
-                      nil,
-                      FieldByName('cod_banner').AsInteger);
+                        icone,
+                        '',
+                        300,
+                        $FFCCCCCC,
+                        0,
+                        $FF6E6E6E,
+                        '',
+                        ClickBanner,
+                        FieldByName('cod_banner').AsInteger);
       end);
 
       icone.DisposeOf;
@@ -253,12 +278,24 @@ begin
   end;
 end;
 
-procedure TFrmPrincipal.btnAcessarClick(Sender: TObject);
+procedure TFrmPrincipal.btnPerfilClick(Sender: TObject);
 begin
-  try
-    DmGlobal.EditarPerfil(Cod_Usuario, edtNome.Text, edtEmail.Text);
-  except on ex:exception do
-    ShowMessage('Erro ao editar perfil: ' +ex.Message);
+  if btnPerfil.Text = 'Editar Perfil' then
+  begin
+    edtNome.Enabled := true;
+    edtEmail.Enabled := true;
+    btnPerfil.Text := 'Salvar Perfil';
+  end
+  else
+  begin
+    try
+      DmGlobal.EditarPerfil(Cod_Usuario, edtNome.Text, edtEmail.Text);
+      btnPerfil.Text := 'Editar Perfil';
+      edtNome.Enabled := false;
+    edtEmail.Enabled := false;
+    except on ex:exception do
+      ShowMessage('Erro ao editar perfil: ' +ex.Message);
+    end;
   end;
 end;
 
@@ -276,6 +313,9 @@ var
   t: TThread;
 begin
   TLoading.Show(FrmPrincipal, '');
+
+  edtNome.Text := Nome;
+  edtEmail.Text := Email;
 
   banners.DeleteAll;
   lbCategorias.Items.Clear;

@@ -28,8 +28,7 @@ type
     procedure EditarPerfil(cod_usuario: integer; nome, email: string);
     procedure ListarServicos(cod_categoria: integer);
     procedure ListarHorarios(cod_servico: integer; dt: string);
-    procedure ConfirmarReserva(cod_servico, cod_Usuario: integer;
-      hora: string);
+    procedure ConfirmarReserva(cod_servico, cod_Usuario: integer; dt, hora: string);
     procedure Login(email, senha: string);
     procedure CriarConta(nome, email, senha: string);
   end;
@@ -166,7 +165,7 @@ begin
   TabHorario.LoadFromJSON(json);
 end;
 
-procedure TDmGlobal.ConfirmarReserva(cod_servico, cod_Usuario: integer; hora: string);
+procedure TDmGlobal.ConfirmarReserva(cod_servico, cod_Usuario: integer; dt, hora: string);
 var
   json: string;
 begin

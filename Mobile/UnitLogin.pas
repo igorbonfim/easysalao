@@ -27,12 +27,14 @@ type
     Image2: TImage;
     edtEmail: TEdit;
     edtSenha: TEdit;
-    Rectangle3: TRectangle;
-    SpeedButton1: TSpeedButton;
+    rectCriarConta: TRectangle;
+    btnCriarConta: TSpeedButton;
     edtNome: TEdit;
     procedure btnLoginClick(Sender: TObject);
     procedure lblContaClick(Sender: TObject);
     procedure lblLoginClick(Sender: TObject);
+    procedure btnCriarContaClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     procedure TThreadLoginTerminate(Sender: TObject);
     { Private declarations }
@@ -63,7 +65,26 @@ begin
   if NOT Assigned(FrmPrincipal) then
     Application.CreateForm(TFrmPrincipal, FrmPrincipal);
 
+  FrmPrincipal.Cod_Usuario := DmGlobal.TabUsuario.FieldByName('cod_usuario').AsInteger;
+  FrmPrincipal.Nome := DmGlobal.TabUsuario.FieldByName('nome').AsString;
+  FrmPrincipal.Email := DmGlobal.TabUsuario.FieldByName('email').AsString;
   FrmPrincipal.Show;
+end;
+
+procedure TFrmLogin.btnCriarContaClick(Sender: TObject);
+var
+  t: TThread;
+begin
+  TLoading.Show(FrmLogin, '');
+
+  t := TThread.CreateAnonymousThread(procedure
+  begin
+    sleep(2000);
+    DmGlobal.CriarConta(edtNome.Text, edtEmail.Text, edtSenha.Text);
+  end);
+
+  t.OnTerminate := TThreadLoginTerminate;
+  t.Start;
 end;
 
 procedure TFrmLogin.btnLoginClick(Sender: TObject);
@@ -80,6 +101,11 @@ begin
 
   t.OnTerminate := TThreadLoginTerminate;
   t.Start;
+end;
+
+procedure TFrmLogin.FormCreate(Sender: TObject);
+begin
+  TabControl.ActiveTab := TabLogin;
 end;
 
 procedure TFrmLogin.lblContaClick(Sender: TObject);

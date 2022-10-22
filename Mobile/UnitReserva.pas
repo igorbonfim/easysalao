@@ -12,7 +12,7 @@ type
   TFrmReserva = class(TForm)
     Rectangle1: TRectangle;
     Label3: TLabel;
-    Image1: TImage;
+    imgVoltar: TImage;
     Label1: TLabel;
     Calendar: TCalendar;
     Label2: TLabel;
@@ -25,6 +25,7 @@ type
     procedure lbHorarioItemClick(const Sender: TCustomListBox;
       const Item: TListBoxItem);
     procedure btnReservarClick(Sender: TObject);
+    procedure imgVoltarClick(Sender: TObject);
   private
     FCod_servico: integer;
     procedure ListarHorarios;
@@ -85,7 +86,7 @@ end;
 procedure TFrmReserva.btnReservarClick(Sender: TObject);
 begin
   try
-    DmGlobal.ConfirmarReserva(cod_servico, FrmPrincipal.Cod_Usuario, lbHorario.TagString);
+    DmGlobal.ConfirmarReserva(cod_servico, FrmPrincipal.Cod_Usuario, FormatDateTime('yyyy-mm-dd', Calendar.Date), lbHorario.TagString);
     Close;
   except on ex:exception do
     ShowMessage('Erro ao fazer a reserva: ' +ex.Message);
@@ -101,6 +102,11 @@ procedure TFrmReserva.FormShow(Sender: TObject);
 begin
   Calendar.Date := Date;
   ListarHorarios;
+end;
+
+procedure TFrmReserva.imgVoltarClick(Sender: TObject);
+begin
+  Close;
 end;
 
 procedure TFrmReserva.ResetHorario;
