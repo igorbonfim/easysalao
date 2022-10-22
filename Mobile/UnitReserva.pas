@@ -18,12 +18,13 @@ type
     Label2: TLabel;
     lbHorario: TListBox;
     rectConfirmar: TRectangle;
-    btnAcessar: TSpeedButton;
+    btnReservar: TSpeedButton;
     Layout1: TLayout;
     procedure CalendarDateSelected(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure lbHorarioItemClick(const Sender: TCustomListBox;
       const Item: TListBoxItem);
+    procedure btnReservarClick(Sender: TObject);
   private
     FCod_servico: integer;
     procedure ListarHorarios;
@@ -42,7 +43,7 @@ implementation
 
 {$R *.fmx}
 
-uses DataModule.Global, Frame.Horario;
+uses DataModule.Global, Frame.Horario, UnitPrincipal;
 
 procedure TFrmReserva.AddHorario(hora: string);
 var
@@ -77,6 +78,18 @@ begin
       Next;
     end;
   end;
+
+  ResetHorario;
+end;
+
+procedure TFrmReserva.btnReservarClick(Sender: TObject);
+begin
+  try
+    DmGlobal.ConfirmarReserva(cod_servico, FrmPrincipal.Cod_Usuario, lbHorario.TagString);
+    Close;
+  except on ex:exception do
+    ShowMessage('Erro ao fazer a reserva: ' +ex.Message);
+  end;
 end;
 
 procedure TFrmReserva.CalendarDateSelected(Sender: TObject);
@@ -86,6 +99,7 @@ end;
 
 procedure TFrmReserva.FormShow(Sender: TObject);
 begin
+  Calendar.Date := Date;
   ListarHorarios;
 end;
 
@@ -94,6 +108,8 @@ var
   frame: TFrameHorario;
   i: integer;
 begin
+  rectConfirmar.Visible := false;
+
   for i := 0 to lbHorario.Items.Count - 1 do
   begin
     frame := TFrameHorario(lbHorario.ItemByIndex(i).Components[0]);
@@ -114,6 +130,9 @@ begin
   frame.rectHora.Fill.Color := $FF872BC9;
   frame.rectHora.Stroke.Color := $FF872BC9;
   frame.lblHora.FontColor := $FFFFFFFF;
+
+  rectConfirmar.Visible := true;
+  lbHorario.TagString := Item.TagString; // Hora selecionada
 end;
 
 end.

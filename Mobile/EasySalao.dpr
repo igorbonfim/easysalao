@@ -11,7 +11,8 @@ uses
   uHorizontalMenu in 'Units\uHorizontalMenu.pas',
   DataModule.Global in 'DataModule\DataModule.Global.pas' {DmGlobal: TDataModule},
   Frame.Categoria in 'Frames\Frame.Categoria.pas' {FrameCategoria: TFrame},
-  Frame.Horario in 'Frames\Frame.Horario.pas' {FrameHorario: TFrame};
+  Frame.Horario in 'Frames\Frame.Horario.pas' {FrameHorario: TFrame},
+  uLoading in 'Units\uLoading.pas';
 
 {$R *.res}
 

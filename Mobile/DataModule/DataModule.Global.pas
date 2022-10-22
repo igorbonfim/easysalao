@@ -28,6 +28,10 @@ type
     procedure EditarPerfil(cod_usuario: integer; nome, email: string);
     procedure ListarServicos(cod_categoria: integer);
     procedure ListarHorarios(cod_servico: integer; dt: string);
+    procedure ConfirmarReserva(cod_servico, cod_Usuario: integer;
+      hora: string);
+    procedure Login(email, senha: string);
+    procedure CriarConta(nome, email, senha: string);
   end;
 
 var
@@ -160,6 +164,45 @@ begin
 
   TabHorario.FieldDefs.Clear;
   TabHorario.LoadFromJSON(json);
+end;
+
+procedure TDmGlobal.ConfirmarReserva(cod_servico, cod_Usuario: integer; hora: string);
+var
+  json: string;
+begin
+  json :=  '{"cod_reserva": "123"}';
+
+  if TabReserva.Active then
+    TabReserva.EmptyDataSet;
+
+  TabReserva.FieldDefs.Clear;
+  TabReserva.LoadFromJSON(json);
+end;
+
+procedure TDmGlobal.Login(email, senha: string);
+var
+  json: string;
+begin
+  json :=  '{"cod_usuario": "123", "nome": "Igor", "email": "teste@teste.com.br"}';
+
+  if TabUsuario.Active then
+    TabUsuario.EmptyDataSet;
+
+  TabUsuario.FieldDefs.Clear;
+  TabUsuario.LoadFromJSON(json);
+end;
+
+procedure TDmGlobal.CriarConta(nome, email, senha: string);
+var
+  json: string;
+begin
+  json :=  '{"cod_usuario": "123", "nome": "Igor", "email": "teste@teste.com.br"}';
+
+  if TabUsuario.Active then
+    TabUsuario.EmptyDataSet;
+
+  TabUsuario.FieldDefs.Clear;
+  TabUsuario.LoadFromJSON(json);
 end;
 
 end.

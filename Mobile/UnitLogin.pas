@@ -5,32 +5,36 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
-  FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit, FMX.TabControl;
+  FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls, FMX.Edit, FMX.TabControl,
+  uLoading;
 
 type
   TFrmLogin = class(TForm)
     Layout1: TLayout;
     Rectangle1: TRectangle;
-    Label1: TLabel;
+    lblConta: TLabel;
     Image1: TImage;
-    Edit1: TEdit;
-    Edit2: TEdit;
+    edtLoginEmail: TEdit;
+    edtLoginSenha: TEdit;
     rectAcessar: TRectangle;
     btnLogin: TSpeedButton;
     TabControl: TTabControl;
     TabLogin: TTabItem;
     TabNovaConta: TTabItem;
     Rectangle2: TRectangle;
-    Label2: TLabel;
+    lblLogin: TLabel;
     Layout2: TLayout;
     Image2: TImage;
-    Edit3: TEdit;
-    Edit4: TEdit;
+    edtEmail: TEdit;
+    edtSenha: TEdit;
     Rectangle3: TRectangle;
     SpeedButton1: TSpeedButton;
-    Edit5: TEdit;
+    edtNome: TEdit;
     procedure btnLoginClick(Sender: TObject);
+    procedure lblContaClick(Sender: TObject);
+    procedure lblLoginClick(Sender: TObject);
   private
+    procedure TThreadLoginTerminate(Sender: TObject);
     { Private declarations }
   public
     { Public declarations }
@@ -43,14 +47,49 @@ implementation
 
 {$R *.fmx}
 
-uses UnitPrincipal;
+uses UnitPrincipal, DataModule.Global;
 
-procedure TFrmLogin.btnLoginClick(Sender: TObject);
+procedure TFrmLogin.TThreadLoginTerminate(Sender: TObject);
 begin
+  TLoading.Hide;
+
+  if Sender is TThread then
+    if Assigned(TThread(Sender).FatalException) then
+    begin
+      ShowMessage(Exception(TThread(Sender).FatalException).Message);
+      exit;
+    end;
+
   if NOT Assigned(FrmPrincipal) then
     Application.CreateForm(TFrmPrincipal, FrmPrincipal);
 
   FrmPrincipal.Show;
+end;
+
+procedure TFrmLogin.btnLoginClick(Sender: TObject);
+var
+  t: TThread;
+begin
+  TLoading.Show(FrmLogin, '');
+
+  t := TThread.CreateAnonymousThread(procedure
+  begin
+    sleep(2000);
+    DmGlobal.Login(edtLoginEmail.Text, edtLoginSenha.Text);
+  end);
+
+  t.OnTerminate := TThreadLoginTerminate;
+  t.Start;
+end;
+
+procedure TFrmLogin.lblContaClick(Sender: TObject);
+begin
+  TabControl.GotoVisibleTab(1);
+end;
+
+procedure TFrmLogin.lblLoginClick(Sender: TObject);
+begin
+  TabControl.GotoVisibleTab(0);
 end;
 
 end.

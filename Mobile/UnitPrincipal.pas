@@ -7,7 +7,7 @@ uses
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.TabControl,
   FMX.Layouts, FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls, FMX.ListBox,
   FMX.Edit, FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base,
-  FMX.ListView, uHorizontalMenu, uFunctions;
+  FMX.ListView, uHorizontalMenu, uFunctions, uLoading;
 
 type
   TFrmPrincipal = class(TForm)
@@ -60,6 +60,7 @@ type
     procedure AddReserva(cod_reserva: integer; descricao, dt, hora: string;
       valor: double);
     procedure ListarReservas;
+    procedure ThreadInicialTerminate(Sender: TObject);
     { Private declarations }
   public
     { Public declarations }
@@ -155,7 +156,9 @@ begin
       icone := TBitmap.Create;
       LoadImageFromURL(icone, FieldByName('foto').AsString);
 
-      banners.AddItem(FieldByName('banner').AsString,
+      TThread.Synchronize(TThread.CurrentThread, procedure
+      begin
+        banners.AddItem(FieldByName('banner').AsString,
                       icone,
                       '',
                       300,
@@ -165,6 +168,7 @@ begin
                       '',
                       nil,
                       FieldByName('cod_banner').AsInteger);
+      end);
 
       icone.DisposeOf;
       Next;
@@ -201,7 +205,10 @@ begin
       frame.lblCategoria.Text := FieldByName('categoria').AsString;
       frame.imgCategoria.Bitmap := icone;
 
-      lbCategorias.AddObject(item);
+      TThread.Synchronize(TThread.CurrentThread, procedure
+      begin
+        lbCategorias.AddObject(item);
+      end);
 
       icone.DisposeOf;
       Next;
@@ -255,13 +262,33 @@ begin
   end;
 end;
 
-procedure TFrmPrincipal.CarregarTelaInicial;
+procedure TFrmPrincipal.ThreadInicialTerminate(Sender: TObject);
 begin
+  TLoading.Hide;
+
+  if Sender is TThread then
+    if Assigned(TThread(Sender).FatalException) then
+      ShowMessage(Exception(TThread(Sender).FatalException).Message);
+end;
+
+procedure TFrmPrincipal.CarregarTelaInicial;
+var
+  t: TThread;
+begin
+  TLoading.Show(FrmPrincipal, '');
+
   banners.DeleteAll;
   lbCategorias.Items.Clear;
 
-  ListarBanners;
-  ListarCategorias;
+  t := TThread.CreateAnonymousThread(procedure
+  begin
+    sleep(3000);
+    ListarBanners;
+    ListarCategorias;
+  end);
+
+  t.OnTerminate := ThreadInicialTerminate;
+  t.Start;
 end;
 
 procedure TFrmPrincipal.imgAba1Click(Sender: TObject);
