@@ -28,10 +28,10 @@ type
     Label1: TLabel;
     Rectangle1: TRectangle;
     Label3: TLabel;
-    Edit1: TEdit;
+    edtNome: TEdit;
     Label4: TLabel;
     Label5: TLabel;
-    Edit2: TEdit;
+    edtEmail: TEdit;
     rectAcessar: TRectangle;
     btnAcessar: TSpeedButton;
     lvReservas: TListView;
@@ -47,6 +47,9 @@ type
     procedure FormResize(Sender: TObject);
     procedure lvReservasItemClickEx(const Sender: TObject; ItemIndex: Integer;
       const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
+    procedure btnAcessarClick(Sender: TObject);
+    procedure lbCategoriasItemClick(const Sender: TCustomListBox;
+      const Item: TListBoxItem);
   private
     banners: THorizontalMenu;
     FCod_Usuario: integer;
@@ -70,7 +73,7 @@ implementation
 
 {$R *.fmx}
 
-uses DataModule.Global, Frame.Categoria;
+uses DataModule.Global, Frame.Categoria, UnitServico;
 
 procedure TFrmPrincipal.AddReserva(cod_reserva: integer;
                                    descricao, dt, hora: string;
@@ -190,6 +193,7 @@ begin
       item.Height := 170;
       item.Selectable := false;
       item.Tag := FieldByName('cod_categoria').AsInteger;
+      item.TagString := FieldByName('categoria').AsString;
 
       frame := TFrameCategoria.Create(item);
       frame.Parent := item;
@@ -242,6 +246,15 @@ begin
   end;
 end;
 
+procedure TFrmPrincipal.btnAcessarClick(Sender: TObject);
+begin
+  try
+    DmGlobal.EditarPerfil(Cod_Usuario, edtNome.Text, edtEmail.Text);
+  except on ex:exception do
+    ShowMessage('Erro ao editar perfil: ' +ex.Message);
+  end;
+end;
+
 procedure TFrmPrincipal.CarregarTelaInicial;
 begin
   banners.DeleteAll;
@@ -254,6 +267,17 @@ end;
 procedure TFrmPrincipal.imgAba1Click(Sender: TObject);
 begin
   SelecionarAba(TImage(Sender));
+end;
+
+procedure TFrmPrincipal.lbCategoriasItemClick(const Sender: TCustomListBox;
+  const Item: TListBoxItem);
+begin
+  if NOT Assigned(FrmServico) then
+    Application.CreateForm(TFrmServico, FrmServico);
+
+  FrmServico.Cod_Categoria := Item.Tag;
+  FrmServico.Desc_Categoria := Item.TagString;
+  FrmServico.Show;
 end;
 
 end.

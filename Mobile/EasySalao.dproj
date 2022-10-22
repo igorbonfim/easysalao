@@ -278,7 +278,7 @@
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="UnitServico.pas">
-            <Form>FrmServiço</Form>
+            <Form>FrmServico</Form>
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="UnitReserva.pas">
@@ -294,6 +294,11 @@
         </DCCReference>
         <DCCReference Include="Frames\Frame.Categoria.pas">
             <Form>FrameCategoria</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Frames\Frame.Horario.pas">
+            <Form>FrameHorario</Form>
             <FormType>fmx</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>

@@ -13,6 +13,9 @@ type
     TabBanner: TFDMemTable;
     TabCategoria: TFDMemTable;
     TabReserva: TFDMemTable;
+    TabUsuario: TFDMemTable;
+    TabServico: TFDMemTable;
+    TabHorario: TFDMemTable;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -22,6 +25,9 @@ type
     procedure ListarCategorias;
     procedure ListarReservas(cod_usuario: integer);
     procedure CancelarReserva(cod_reserva: integer);
+    procedure EditarPerfil(cod_usuario: integer; nome, email: string);
+    procedure ListarServicos(cod_categoria: integer);
+    procedure ListarHorarios(cod_servico: integer; dt: string);
   end;
 
 var
@@ -106,6 +112,54 @@ begin
 
   TabReserva.FieldDefs.Clear;
   TabReserva.LoadFromJSON(json);
+end;
+
+procedure TDmGlobal.EditarPerfil(cod_usuario: integer;
+                                 nome, email: string);
+var
+  json: string;
+begin
+  json :=  '{"cod_usuario": 1}';
+
+  if TabUsuario.Active then
+    TabUsuario.EmptyDataSet;
+
+  TabUsuario.FieldDefs.Clear;
+  TabUsuario.LoadFromJSON(json);
+end;
+
+procedure TDmGlobal.ListarServicos(cod_categoria: integer);
+var
+  json: string;
+begin
+  json :=  '[{"cod_servico": 1, "descricao": "Corte Cabelo Feminino", "valor": 200},' +
+            '{"cod_servico": 2, "descricao": "Corte Cabelo Masculino", "valor": 100},' +
+            '{"cod_servico": 3, "descricao": "Tintura", "valor": 160},' +
+            '{"cod_servico": 4, "descricao": "Luzes", "valor": 190}]';
+
+  if TabServico.Active then
+    TabServico.EmptyDataSet;
+
+  TabServico.FieldDefs.Clear;
+  TabServico.LoadFromJSON(json);
+end;
+
+procedure TDmGlobal.ListarHorarios(cod_servico: integer; dt: string);
+var
+  json: string;
+begin
+  json :=  '[{"hora": "09:00"},' +
+            '{"hora": "09:30"},' +
+            '{"hora": "11:00"},' +
+            '{"hora": "14:00"},' +
+            '{"hora": "15:00"},' +
+            '{"hora": "15:30"}]';
+
+  if TabHorario.Active then
+    TabHorario.EmptyDataSet;
+
+  TabHorario.FieldDefs.Clear;
+  TabHorario.LoadFromJSON(json);
 end;
 
 end.
